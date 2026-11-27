@@ -7,7 +7,7 @@ project_id: "yuvaraj-internal-project"
 region: "asia-south1"
 
 instances:
-  - name: prod-compute-vm-01
+  - name: prod-compute-vm-001
     machine_type: e2-standard-2
     zone: asia-south1-b
     network: default
