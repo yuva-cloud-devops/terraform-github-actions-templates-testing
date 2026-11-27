@@ -1,9 +1,15 @@
 locals {
-  # Resolve YAML config path: check custom path, then environments/<env>/compute.yaml, then compute.yaml
+  # Resolve YAML config path: check explicit var.config_file, repo-root environments/<env>/compute.yaml(.yml), or local fallback
   config_path = var.config_file != "" ? var.config_file : (
-    fileexists("${path.module}/environments/${var.environment}/compute.yaml") ?
-    "${path.module}/environments/${var.environment}/compute.yaml" :
-    "${path.module}/compute.yaml"
+    fileexists("${path.module}/../environments/${var.environment}/compute.yaml") ?
+    "${path.module}/../environments/${var.environment}/compute.yaml" : (
+      fileexists("${path.module}/../environments/${var.environment}/compute.yml") ?
+      "${path.module}/../environments/${var.environment}/compute.yml" : (
+        fileexists("${path.module}/environments/${var.environment}/compute.yaml") ?
+        "${path.module}/environments/${var.environment}/compute.yaml" :
+        "${path.module}/compute.yaml"
+      )
+    )
   )
 
   # Decode YAML file safely
@@ -23,7 +29,7 @@ resource "google_compute_instance" "vm" {
   machine_type = try(each.value.machine_type, "e2-medium")
   zone         = try(each.value.zone, "${var.region}-a")
   tags         = try(each.value.tags, ["allow-ssh"])
-  labels       = merge(try(each.value.labels, {}), {
+  labels = merge(try(each.value.labels, {}), {
     environment = var.environment
     managed_by  = "terraform"
   })
