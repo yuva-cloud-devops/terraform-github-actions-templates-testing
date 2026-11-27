@@ -1,0 +1,25 @@
+# ==============================================================================
+# UAT Compute Infrastructure Specification (1 VM per environment)
+# ==============================================================================
+
+environment: uat
+project_id: "yuvaraj-internal-project"
+region: "asia-south1"
+
+instances:
+  - name: uat-compute-vm-01
+    machine_type: e2-medium
+    zone: asia-south1-a
+    network: default
+    enable_public_ip: false         # Private-only VM (dynamic access_config omitted)
+    tags:
+      - internal-service
+      - allow-ssh
+    labels:
+      role: compute
+      env: uat
+    boot_disk:
+      image: debian-cloud/debian-12
+      size_gb: 50
+      type: pd-balanced
+      auto_delete: true

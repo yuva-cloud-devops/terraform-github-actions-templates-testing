@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ComputeConfigurationSchema",
+  "type": "object",
+  "required": ["environment", "project_id", "region", "instances"],
+  "properties": {
+    "environment": {
+      "type": "string",
+      "enum": ["dev", "uat", "prod"]
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "region": {
+      "type": "string"
+    },
+    "instances": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "machine_type", "zone", "enable_public_ip"],
+        "properties": {
+          "name": { "type": "string" },
+          "machine_type": { "type": "string" },
+          "zone": { "type": "string" },
+          "network": { "type": "string" },
+          "subnetwork": { "type": "string" },
+          "enable_public_ip": { "type": "boolean" },
+          "static_nat_ip": { "type": "string" },
+          "network_tier": { "type": "string", "enum": ["PREMIUM", "STANDARD"] },
+          "tags": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "labels": { "type": "object" },
+          "boot_disk": {
+            "type": "object",
+            "required": ["image", "size_gb"],
+            "properties": {
+              "image": { "type": "string" },
+              "size_gb": { "type": "integer" },
+              "type": { "type": "string" },
+              "auto_delete": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

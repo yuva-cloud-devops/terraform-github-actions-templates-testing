@@ -1,0 +1,25 @@
+# ==============================================================================
+# Production Compute Infrastructure Specification (1 VM per environment)
+# ==============================================================================
+
+environment: prod
+project_id: "yuvaraj-internal-project"
+region: "asia-south1"
+
+instances:
+  - name: prod-compute-vm-01
+    machine_type: e2-standard-2
+    zone: asia-south1-b
+    network: default
+    enable_public_ip: false         # Strictly private IP only (access_config omitted)
+    tags:
+      - internal-service
+      - allow-ssh
+    labels:
+      role: compute
+      env: prod
+    boot_disk:
+      image: debian-cloud/debian-12
+      size_gb: 100
+      type: pd-ssd
+      auto_delete: true

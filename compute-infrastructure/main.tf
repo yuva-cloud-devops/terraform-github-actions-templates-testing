@@ -1,9 +1,15 @@
 locals {
-  # Resolve YAML config path: check custom path, then environments/<env>/compute.yaml, then compute.yaml
+  # Resolve YAML config path: check explicit var.config_file, repo-root environments/<env>/compute.yaml(.yml), or local fallback
   config_path = var.config_file != "" ? var.config_file : (
-    fileexists("${path.module}/environments/${var.environment}/compute.yaml") ?
-    "${path.module}/environments/${var.environment}/compute.yaml" :
-    "${path.module}/compute.yaml"
+    fileexists("${path.module}/../environments/${var.environment}/compute.yaml") ?
+    "${path.module}/../environments/${var.environment}/compute.yaml" : (
+      fileexists("${path.module}/../environments/${var.environment}/compute.yml") ?
+      "${path.module}/../environments/${var.environment}/compute.yml" : (
+        fileexists("${path.module}/environments/${var.environment}/compute.yaml") ?
+        "${path.module}/environments/${var.environment}/compute.yaml" :
+        "${path.module}/compute.yaml"
+      )
+    )
   )
 
   # Decode YAML file safely
@@ -23,7 +29,7 @@ resource "google_compute_instance" "vm" {
   machine_type = try(each.value.machine_type, "e2-medium")
   zone         = try(each.value.zone, "${var.region}-a")
   tags         = try(each.value.tags, ["allow-ssh"])
-  labels       = merge(try(each.value.labels, {}), {
+  labels = merge(try(each.value.labels, {}), {
     environment = var.environment
     managed_by  = "terraform"
   })
@@ -38,7 +44,7 @@ resource "google_compute_instance" "vm" {
     }
   }
 
-  # Network Interface with Dynamic Public IP (access_config) block
+  # Network Interface using Default VPC & Default Subnet with Dynamic Public IP (access_config)
   network_interface {
     network    = try(each.value.network, "default")
     subnetwork = try(each.value.subnetwork, null)
@@ -63,12 +69,6 @@ resource "google_compute_instance" "vm" {
       scopes = try(each.value.service_account.scopes, ["https://www.googleapis.com/auth/cloud-platform"])
     }
   }
-
-  # Metadata startup script
-  metadata = merge(
-    try(each.value.metadata, {}),
-    try(each.value.startup_script, "") != "" ? { "startup-script" = each.value.startup_script } : {}
-  )
 
   allow_stopping_for_update = true
 }

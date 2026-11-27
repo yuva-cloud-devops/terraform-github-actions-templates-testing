@@ -20,11 +20,12 @@ concurrency:
 
 jobs:
   terraform:
-    name: Centralized Terraform Pipeline
+    name: CTP
     uses: yuva-cloud-devops/terraform-github-actions-templates/.github/workflows/terraform-pipeline.yml@main
     with:
       cloud_provider: "gcp"
       terraform_version: "1.10.5"
+      state_bucket: "yuvaraj-internal-project-dev-tfstate"
       enable_security_scans: true
       templates_ref: "main"
     secrets: inherit
