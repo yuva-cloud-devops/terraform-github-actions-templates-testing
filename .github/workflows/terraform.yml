@@ -20,7 +20,7 @@ concurrency:
 
 jobs:
   terraform:
-    name: Centralized Terraform Pipeline
+    name: CTP
     uses: yuva-cloud-devops/terraform-github-actions-templates/.github/workflows/terraform-pipeline.yml@main
     with:
       cloud_provider: "gcp"

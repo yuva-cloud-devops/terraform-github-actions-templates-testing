@@ -17,8 +17,7 @@ terraform-github-actions-templates-testing/
 ├── compute-infrastructure/
 │   ├── versions.tf                # Google provider & generic GCS backend
 │   ├── variables.tf               # Region, project_id, environment, config_file inputs
-│   ├── main.tf                    # Dynamic block YAML VM engine
-│   ├── firewall.tf                # Default VPC security rules (Web, Internal, IAP SSH)
+│   ├── main.tf                    # Dynamic block YAML VM engine (uses default VPC & subnet)
 │   └── outputs.tf                 # Public & private IP summary
 │
 ├── environments/

@@ -43,8 +43,7 @@
               "type": { "type": "string" },
               "auto_delete": { "type": "boolean" }
             }
-          },
-          "startup_script": { "type": "string" }
+          }
         }
       }
     }

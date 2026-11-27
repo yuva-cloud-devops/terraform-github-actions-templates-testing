@@ -44,7 +44,7 @@ resource "google_compute_instance" "vm" {
     }
   }
 
-  # Network Interface with Dynamic Public IP (access_config) block
+  # Network Interface using Default VPC & Default Subnet with Dynamic Public IP (access_config)
   network_interface {
     network    = try(each.value.network, "default")
     subnetwork = try(each.value.subnetwork, null)
@@ -69,12 +69,6 @@ resource "google_compute_instance" "vm" {
       scopes = try(each.value.service_account.scopes, ["https://www.googleapis.com/auth/cloud-platform"])
     }
   }
-
-  # Metadata startup script
-  metadata = merge(
-    try(each.value.metadata, {}),
-    try(each.value.startup_script, "") != "" ? { "startup-script" = each.value.startup_script } : {}
-  )
 
   allow_stopping_for_update = true
 }
