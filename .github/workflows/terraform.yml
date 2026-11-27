@@ -1,0 +1,30 @@
+name: Terraform Pipeline
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: tf-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  terraform:
+    name: Centralized Terraform Pipeline
+    uses: yuva-cloud-devops/terraform-github-actions-templates/.github/workflows/terraform-pipeline.yml@main
+    with:
+      cloud_provider: "gcp"
+      terraform_version: "1.10.5"
+      enable_security_scans: true
+      templates_ref: "main"
+    secrets: inherit

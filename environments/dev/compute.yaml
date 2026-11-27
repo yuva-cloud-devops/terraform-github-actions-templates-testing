@@ -1,0 +1,30 @@
+# Duplicate placed at environment root for schema validation and consumer conventions
+environment: dev
+
+instances:
+  - name: dev-web-frontend-01
+    machine_type: e2-medium
+    zone: us-central1-a
+    network: default
+    enable_public_ip: true
+    tags: [web, allow-ssh]
+    labels:
+      role: frontend
+
+  - name: dev-app-backend-01
+    machine_type: e2-standard-2
+    zone: us-central1-a
+    network: default
+    enable_public_ip: false
+    tags: [internal-service, allow-ssh]
+    labels:
+      role: backend
+
+  - name: dev-db-postgres-01
+    machine_type: e2-standard-2
+    zone: us-central1-b
+    network: default
+    enable_public_ip: false
+    tags: [internal-service, allow-ssh]
+    labels:
+      role: database

@@ -1,0 +1,8 @@
+name: dev
+cloud_provider: gcp
+project_id: "your-gcp-dev-project-id"
+region: us-central1
+cost_center: engineering-dev
+tags:
+  env: dev
+  owner: devops-team
